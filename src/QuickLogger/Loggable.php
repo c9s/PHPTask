@@ -1,4 +1,6 @@
 <?php
+namespace QuickLogger;
+
 interface Loggable {
     public function info($msg);
     public function debug($msg);

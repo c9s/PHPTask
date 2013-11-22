@@ -19,7 +19,8 @@
     ],
     "autoload": {
         "psr-0": {
-            "PHPTask": "src"
+            "PHPTask": "src",
+            "QuickLogger": "src"
         }
     },
     "version": "1.0"
