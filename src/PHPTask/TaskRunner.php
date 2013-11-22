@@ -16,8 +16,8 @@ class TaskRunner implements IteratorAggregate {
 
     public function __construct($config = array()) {
         $this->config = $config;
-        if ( isset($config['Tasks']) ) {
-            $this->loadTasks($config['Tasks']);
+        if ( isset($config['tasks']) ) {
+            $this->loadTasks($config['tasks']);
         }
     }
 
@@ -47,13 +47,13 @@ class TaskRunner implements IteratorAggregate {
         if ( class_exists($taskName, true) ) {
             return new $taskName($taskConfig);
         } else {
-            $class = 'Corneltek\\Preview\\' . $taskName;
-            if ( class_exists($class, true) ) {
-                return new $class($taskConfig);
-            }
-            $class = 'Corneltek\\Preview\\Task\\' . $taskName;
-            if ( class_exists($class, true) ) {
-                return new $class($taskConfig);
+            if ( isset($this->config['namespaces']) ) {
+                foreach( $this->config['namespaces'] as $ns ) {
+                    $class = $ns . '\\' . $taskName;
+                    if ( class_exists($class, true) ) {
+                        return new $class($taskConfig);
+                    }
+                }
             }
         }
         throw new Exception("Task $taskName can not be loaded.");
