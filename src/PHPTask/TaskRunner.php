@@ -14,17 +14,9 @@ class TaskRunner implements IteratorAggregate {
 
     public $logger;
 
-
     public function __construct($config = array()) {
         $this->logger = ConsoleLogger::getInstance();
         $this->config = $config;
-
-        if ( isset($config['Verbose']) && $config['Verbose'] ) {
-            $this->logger->setVerbose();
-        } else if ( isset($config['Debug']) && $config['Debug'] ) {
-            $this->logger->setDebug();
-        }
-
         if ( isset($config['Tasks']) ) {
             $this->loadTasks($config['Tasks']);
         }
