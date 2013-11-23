@@ -17,6 +17,10 @@
             "homepage": "http:\/\/c9s.me"
         }
     ],
-    "autoload": { "psr-0": { "PHPTask": "src" } },
-    "version": "1.0"
+    "autoload": {
+        "psr-0": {
+            "PHPTask": "src"
+        }
+    },
+    "version": "1.0.1"
 }
