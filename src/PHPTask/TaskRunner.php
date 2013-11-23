@@ -3,13 +3,10 @@ namespace PHPTask;
 use IteratorAggregate;
 use ArrayIterator;
 
-class TaskRunner implements IteratorAggregate {
+class TaskRunner implements IteratorAggregate 
+{
 
     public $tasks = array();
-
-    /**
-     * TODO: base config across tasks.
-     */
     public $config = array();
 
     public $logger;
@@ -17,7 +14,7 @@ class TaskRunner implements IteratorAggregate {
     public function __construct($config = array()) {
         $this->config = $config;
         if ( isset($config['tasks']) ) {
-            $this->loadTasks($config['tasks']);
+            $this->evalTasks($config['tasks']);
         }
     }
 
@@ -27,7 +24,7 @@ class TaskRunner implements IteratorAggregate {
         }
     }
 
-    public function loadTasks($tasks) {
+    public function evalTasks($tasks) {
         foreach( $tasks as $taskParam ) {
             if ( is_array($taskParam) ) {
                 foreach( $taskParam as $taskClass => $taskConfig ) {
@@ -59,6 +56,10 @@ class TaskRunner implements IteratorAggregate {
         throw new Exception("Task $taskName can not be loaded.");
     }
 
+
+    /**
+     * Push Task Object
+     * */
     public function addTask($task) {
         $this->tasks[] = $task;
     }
