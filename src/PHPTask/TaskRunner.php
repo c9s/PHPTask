@@ -35,7 +35,7 @@ class TaskRunner implements IteratorAggregate
     }
 
     public function __call($m, $a) {
-        if ( method_exists($this->logger, $m) ) {
+        if ( $this->logger && method_exists($this->logger, $m) ) {
             return call_user_func_array(array($this->logger, $m ), $a);
         }
     }
