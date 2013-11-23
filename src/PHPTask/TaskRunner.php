@@ -47,17 +47,15 @@ class TaskRunner implements IteratorAggregate
                 foreach( $taskParam as $taskClass => $taskConfig ) {
                     $this->info('Loading task ' . $taskClass);
                     $taskConfig = $taskConfig ? array_merge($this->config, $taskConfig) : $this->config;
-                    $task = $this->loadTask($taskClass,$taskConfig);
-                    $this->addTask($task);
+                    $this->addTask( $this->evalTask($taskClass,$taskConfig) );
                 }
             } else if ( is_string($taskParam) ) {
-                $task = $this->loadTask($taskParam,$this->config);
-                $this->addTask($task);
+                $this->addTask( $this->evalTask($taskParam,$this->config) );
             }
         }
     }
 
-    public function loadTask($taskName, $taskConfig) {
+    public function evalTask($taskName, $taskConfig) {
         if ( class_exists($taskName, true) ) {
             return new $taskName($taskConfig);
         } else {
