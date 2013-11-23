@@ -2,12 +2,13 @@
 namespace PHPTask;
 use IteratorAggregate;
 use ArrayIterator;
+use LightLogger\Loggable;
 
 class TaskRunner implements IteratorAggregate 
 {
-
     public $tasks = array();
     public $config = array();
+    public $namespaces = array();
 
     public $logger;
 
@@ -16,6 +17,21 @@ class TaskRunner implements IteratorAggregate
         if ( isset($config['tasks']) ) {
             $this->evalTasks($config['tasks']);
         }
+        if ( isset($config['logger']) ) {
+            $this->setLogger($config['logger']);
+        }
+        if ( isset($config['namespaces']) ) {
+            $this->namespaces = $config['namespaces'];
+        }
+    }
+
+    public function setNamespaces(array $ns) {
+        $this->namespaces = $ns;
+    }
+
+    public function setLogger(Loggable $logger) 
+    {
+        $this->logger = $logger;
     }
 
     public function __call($m, $a) {
@@ -23,6 +39,7 @@ class TaskRunner implements IteratorAggregate
             return call_user_func_array(array($this->logger, $m ), $a);
         }
     }
+
 
     public function evalTasks($tasks) {
         foreach( $tasks as $taskParam ) {
