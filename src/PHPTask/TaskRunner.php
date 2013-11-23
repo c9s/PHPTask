@@ -55,15 +55,30 @@ class TaskRunner implements IteratorAggregate
         }
     }
 
-    public function evalTask($taskName, $taskConfig) {
+    /**
+     * Create a task object from task name with parameters
+     *
+     * @param string $taskName task name
+     * @param array $config task config
+     * @return BaseTask
+     * */
+    public function evalTask($taskName, $config) {
         if ( class_exists($taskName, true) ) {
-            return new $taskName($taskConfig);
+            $task = new $taskName($config);
+            if ( $this->logger ) {
+                $task->setLogger($this->logger);
+            }
+            return $task;
         } else {
             if ( isset($this->config['namespaces']) ) {
                 foreach( $this->config['namespaces'] as $ns ) {
                     $class = $ns . '\\' . $taskName;
                     if ( class_exists($class, true) ) {
-                        return new $class($taskConfig);
+                        $task = new $class($config);
+                        if ( $this->logger ) {
+                            $task->setLogger($this->logger);
+                        }
+                        return $task;
                     }
                 }
             }

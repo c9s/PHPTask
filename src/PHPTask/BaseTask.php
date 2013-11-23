@@ -1,6 +1,6 @@
 <?php
-namespace PHPTask\Task;
-use Corneltek\Preview\ConsoleLogger;
+namespace PHPTask;
+use LightLogger\Loggable;
 
 abstract class BaseTask {
     public $desc;
@@ -11,13 +11,19 @@ abstract class BaseTask {
 
     public $logger;
 
-    public function __construct($config = array()) {
+    public function __construct($config = array())
+    {
         $this->config = $config;
-        $this->logger = ConsoleLogger::getInstance();
     }
 
+    public function setLogger(Loggable $logger) 
+    {
+        $this->logger = $logger;
+    }
+
+
     public function __call($m, $a) {
-        if ( method_exists($this->logger, $m) ) {
+        if ( $this->logger && method_exists($this->logger, $m) ) {
             return call_user_func_array(array($this->logger, $m ), $a);
         }
     }
