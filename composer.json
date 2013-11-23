@@ -7,7 +7,7 @@
     },
     "require-dev": {
         "corneltek\/phpunit-testmore": "dev-master",
-        "corneltek\/universal": "dev-master"
+        "corneltek\/lightlogger": "~1"
     },
     "license": "MIT",
     "authors": [
@@ -17,11 +17,6 @@
             "homepage": "http:\/\/c9s.me"
         }
     ],
-    "autoload": {
-        "psr-0": {
-            "PHPTask": "src",
-            "QuickLogger": "src"
-        }
-    },
+    "autoload": { "psr-0": { "PHPTask": "src" } },
     "version": "1.0"
 }
