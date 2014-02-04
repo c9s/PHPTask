@@ -62,26 +62,27 @@ class TaskRunner implements IteratorAggregate
      * @param array $config task config
      * @return BaseTask
      * */
-    public function evalTask($taskName, $config) {
+    public function evalTask($taskName, $config = array())
+    {
+        if ( isset($this->config['namespaces']) ) {
+            foreach( $this->config['namespaces'] as $ns ) {
+                $class = $ns . '\\' . $taskName;
+                if ( class_exists($class, true) ) {
+                    $task = new $class($config);
+                    if ( $this->logger ) {
+                        $task->setLogger($this->logger);
+                    }
+                    return $task;
+                }
+            }
+        }
+
         if ( class_exists($taskName, true) ) {
             $task = new $taskName($config);
             if ( $this->logger ) {
                 $task->setLogger($this->logger);
             }
             return $task;
-        } else {
-            if ( isset($this->config['namespaces']) ) {
-                foreach( $this->config['namespaces'] as $ns ) {
-                    $class = $ns . '\\' . $taskName;
-                    if ( class_exists($class, true) ) {
-                        $task = new $class($config);
-                        if ( $this->logger ) {
-                            $task->setLogger($this->logger);
-                        }
-                        return $task;
-                    }
-                }
-            }
         }
         throw new Exception("Task $taskName can not be loaded.");
     }
@@ -95,13 +96,16 @@ class TaskRunner implements IteratorAggregate
     }
 
     public function run() {
+        $ranTasks = 0;
         foreach( $this->tasks as $task ) {
             $this->info("Running task " . $task->getName() . (($desc = $task->getDesc()) ? ":$desc" : "") );
             if ( false === $task->run() ) {
                 $this->error( "Task " . $task->getName() . " failed.");
                 break;
             }
+            $ranTasks++;
         }
+        return $ranTasks;
     }
 
     public function getIterator() {
